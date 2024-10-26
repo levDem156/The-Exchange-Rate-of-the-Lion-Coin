@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+
+    <style>
+        body{
+            display: flex;
+            justify-content: center;
+            align-self: center;
+            overflow: hidden;
+        }
+
+        .kurs_since{
+            width:500px;
+            height: 200px;
+            background-color: rgb(60, 60, 60);
+            display: flex;
+            justify-content: space-between;
+            overflow-x: auto;
+            overflow-y: hidden;
+            align-items: center;
+
+        }
+
+        .kurs_block_spawn{
+            width: 97%;
+            height: 100%;
+            display: flex;
+            overflow-x: auto;
+            overflow-y: hidden;
+            justify-content: start;
+            align-items: center;
+        }
+
+        .Check{
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 3%;
+            height: 100%;
+        }
+
+        .Check h1{
+            font-size: 8px;
+            margin:0px;
+            color: rgb(100, 90, 246);
+        }
+
+        .Check div{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: solid 1px rgb(98, 0, 178);
+        }
+
+        .kurs_show{
+            min-height: 100%;
+            width: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .kurs_block{
+            width: 100%;
+            border: ridge 2px black;
+        }
+
+    </style>
+
+</head>
+<body>
+
+    <div class="kurs_since" >
+        <div class="kurs_block_spawn", id="fon"></div>
+        <div class="Check">
+            <div><h1 id="ch1">17</h1></div>
+            <div><h1 id="ch2">16</h1></div>
+            <div><h1 id="ch3">15</h1></div>
+            <div><h1 id="ch4">14</h1></div>
+            <div><h1 id="ch5">13</h1></div>
+            <div><h1 id="ch6">12</h1></div>
+            <div><h1 id="ch7">11</h1></div>
+            <div><h1 id="ch8">10</h1></div>
+            <div><h1 id="ch9">9</h1></div>
+            <div><h1 id="ch10">8</h1></div>
+            <div><h1 id="ch11">7</h1></div>
+            <div><h1 id="ch12">6</h1></div>
+            <div><h1 id="ch13">5</h1></div>
+            <div><h1 id="ch14">4</h1></div>
+            <div><h1 id="ch15">3</h1></div>
+            <div><h1 id="ch16">2</h1></div>
+            <div><h1 id="ch17">1</h1></div>
+        </div>
+    </div>
+
+    <script>
+        function getRandomInt(min, max) {
+            min = Math.ceil(min);
+            max = Math.floor(max);
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+        
+
+
+
+        let count = 0; // Счетчик для уникального ID
+        let count_del = 1; // Счетчик для delete уникального ID
+        let pos_brain = 0; //для запоминания прошлой высоты bottom
+
+        function km(){
+            // Создаем новое поле для блока
+            let block_back = document.createElement("div");
+            // Создаем сам блок
+            let block_end = document.createElement("div");
+
+            count++;
+
+            block_back.id = "bb-" + count;  // Присваиваем уникальный ID
+            block_end.id = "be-" + count;  // Присваиваем уникальный ID
+
+            console.log(`count:${block_end.id}`)
+
+            block_back.classList.add('kurs_show');  // Применяем общий класс для стилей
+            block_end.classList.add('kurs_block');  // Применяем общий класс для стилей
+
+            wd = getRandomInt(7,10);
+            block_back.style.width = wd + "px";  // Устанавливаем ширину блока
+            block_back.style.minWidth = wd + "px";  // Устанавливаем ширину блока
+
+
+            //погнали пилить логику курса
+
+            pos = getRandomInt(15,45); // получаем рандомный подЪём или спад
+            //определяем подъём или спад
+            let log=getRandomInt(0,1);
+            if (log==0){
+                pos_brain += pos;
+                cl = "green"; //и устанавливаем цвет
+            }else{
+                pos_brain -= pos;
+                cl = "red";
+            }
+
+            hg = getRandomInt(pos-2,pos-2);
+            block_end.style.height = hg + "px";  // Устанавливаем высоту блока
+
+            console.log(pos_brain)
+
+            block_end.style.marginBottom = pos_brain + "px";  // Устанавливаем position блока
+            block_end.style.backgroundColor = cl;  // Устанавливаем цвет блока
+
+            const targetBlock = document.getElementById('fon'); // Находим блок с определённым id
+            targetBlock.appendChild(block_back);          // Добавляем новый элемент в блок
+
+
+            const block_kurs = document.getElementById(`bb-${count}`); // Находим блок с определённым id
+            block_kurs.appendChild(block_end);          // Добавляем новый элемент в блок
+
+
+
+            if (pos_brain >= 180) {
+                pos_brain -= pos;
+                for (let i = 1; i <= count; i++) { // цикл для изменения положения курса
+                    const block_of_kurs = document.getElementById(`be-${i}`); // Находим блок с определённым id
+                    if (block_of_kurs) {  // Проверяем, что элемент существует
+                        // Получаем значение margin-bottom и приводим его к числу
+                        const marginBottom = parseInt(window.getComputedStyle(block_of_kurs).marginBottom, 10); 
+                        
+                        // Устанавливаем новый margin-bottom
+                        block_of_kurs.style.marginBottom = (marginBottom - 20) + "px";
+                        console.log(block_of_kurs.id);
+                    }
+                }
+                for (let i = 1; i <= 17; i++) { // цикл для изменения текста элементов
+                    const block_check = document.getElementById(`ch${i}`); // Находим блок с определённым id, например, ch1, ch2 и т.д.
+                          
+                    const chislo = parseInt(block_check.textContent, 10); // Получаем текущее число и приводим его к int                  
+                    block_check.textContent = chislo + 1; // Увеличиваем значение на 1 и устанавливаем его как новый текст
+                
+                }
+            }
+
+            if (pos_brain <= -130) {
+                pos_brain += pos;
+                for (let i = 1; i <= count; i++) { // цикл для изменения положения курса
+                    const block_of_kurs = document.getElementById(`be-${i}`); // Находим блок с определённым id
+                    if (block_of_kurs) {  // Проверяем, что элемент существует
+                        // Получаем значение margin-bottom и приводим его к числу
+                        const marginBottom = parseInt(window.getComputedStyle(block_of_kurs).marginBottom, 10); 
+                        
+                        // Устанавливаем новый margin-bottom
+                        block_of_kurs.style.marginBottom = (marginBottom + 20) + "px";
+                        console.log(block_of_kurs.id);
+                    }
+                }
+
+                for (let i = 1; i <= 17; i++) { // цикл для изменения текста элементов
+                    const block_check = document.getElementById(`ch${i}`); // Находим блок с определённым id, например, ch1, ch2 и т.д.
+    
+                    const chislo = parseInt(block_check.textContent, 10); // Получаем текущее число и приводим его к int                     
+                    block_check.textContent = chislo - 1; // Увеличиваем значение на 1 и устанавливаем его как новый текст
+                    
+                }
+            }
+
+            targetBlock.scrollLeft = targetBlock.scrollWidth;
+
+            if (count>50){  //удаляем объекты если их больше ... (числом можно регулировать дальность продвижения курса)
+                document.getElementById(`bb-${count_del}`).remove();
+                count_del+=1;
+            }
+
+        }
+
+        setInterval(km, 1000)
+    </script>
+    
+</body>
+</html>
